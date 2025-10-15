@@ -121,9 +121,12 @@ public class Calculator {
                         }
                         else if (buttonValue.equals("⌫")) {
                             String text = displayLabel.getText();
-                            if (!text.equals("0")) {
+                            if (text.length() > 1) {
                                 String newText = text.substring(0, text.length() - 1);
                                 displayLabel.setText(newText);
+                            }
+                            else {
+                                displayLabel.setText("0");
                             }
 
                         }
