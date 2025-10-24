@@ -13,6 +13,9 @@ class CalculatorView {
     final Color customDarkGray = new Color(80, 80, 80);
     final Color customBlack = new Color(28, 28, 28);
     final Color customOrange = new Color(255, 149, 0);
+    final Color integerColor = new Color(255, 255, 255);
+    final Color decimalColor = new Color(255, 200, 0);
+    final Color errorColor = new Color(255, 80, 80);
 
 
     final String[] buttonValues = {
@@ -41,11 +44,11 @@ class CalculatorView {
 
 
         displayLabel.setBackground(customBlack);
-        displayLabel.setForeground(Color.white);
-        displayLabel.setFont(new Font("Arial", Font.PLAIN, 80));
+//        displayLabel.setForeground(Color.white);
+        displayLabel.setFont(new Font("Consolas", Font.BOLD, 60));
         displayLabel.setHorizontalAlignment(JLabel.RIGHT);
-        displayLabel.setText("0");
         displayLabel.setOpaque(true);
+        displayLabel.setText(formatStyledText("0.00"));
 
 
         displayPanel.add(displayLabel);
@@ -76,7 +79,7 @@ class CalculatorView {
 
     void setVisible(boolean visible) { frame.setVisible(visible);}
 
-    void setDisplay(String text) {displayLabel.setText(text);}
+    void setDisplay(String text) {displayLabel.setText(formatStyledText(text));}
 
     java.util.List<JButton> getAllButtons() {
         java.util.List<JButton> list = new java.util.ArrayList<>();
@@ -84,5 +87,20 @@ class CalculatorView {
             if (c instanceof JButton) list.add((JButton) c);
         }
         return list;
+    }
+
+    private String formatStyledText(String value) {
+        if (value.equals("ERROR")) {
+            return String.format("<html><font color='rgb(%d,%d,%d)'><b>%s</b></font></html>",
+                    errorColor.getRed(), errorColor.getBlue(), errorColor.getGreen(), value);
+        }
+        String[] parts = value.split("\\.");
+        if (parts.length == 2) {
+            return String.format("<html><font color='rgb(%d,%d,%d)'>%s</font><font color='rgb(%d,%d,%d)'>.%s</font></html>",
+                    integerColor.getRed(), integerColor.getGreen(), integerColor.getBlue(), parts[0],
+                    decimalColor.getRed(), decimalColor.getGreen(), decimalColor.getBlue(), parts[1]);
+        }
+        return String.format("<html><font color='rgb(%d,%d,%d)'>%s</font></html>",
+                integerColor.getRed(), integerColor.getGreen(), integerColor.getBlue(), value);
     }
 }
