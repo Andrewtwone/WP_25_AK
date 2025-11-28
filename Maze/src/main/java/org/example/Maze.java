@@ -55,7 +55,7 @@ public class Maze {
         entrance.setSide(Direction.WEST, null);
         exit.setSide(Direction.EAST, null);
 
-        // 3. Drzwi (jak w Twoim obrazku)
+        // 3. Drzwi
         connect(0, 0, 0, 1, Direction.EAST);
         connect(0, 1, 0, 2, Direction.EAST);
         connect(0, 2, 1, 2, Direction.SOUTH);
