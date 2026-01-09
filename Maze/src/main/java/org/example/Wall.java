@@ -11,6 +11,10 @@ public class Wall extends MapSite {
         this.direction = d;
     }
 
+    public Direction getDirection() {
+        return direction;
+    }
+
     @Override
     public void draw(Image image) {
         Graphics g = image.getGraphics();
