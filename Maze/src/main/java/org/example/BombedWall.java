@@ -4,79 +4,83 @@ import java.awt.*;
 
 public class BombedWall extends Wall {
 
-    private boolean isDetonated;
+    private boolean detonated;
 
-    public BombedWall(int x, int y, Direction d, boolean isDetonated) {
+    public BombedWall(int x, int y, Direction d, boolean detonated) {
         super(x, y, d);
-        this.isDetonated = isDetonated;
-    }
-
-    public boolean isDetonated() {
-        return isDetonated;
+        this.detonated = detonated;
     }
 
     public void setDetonated(boolean detonated) {
-        isDetonated = detonated;
+        this.detonated = detonated;
+    }
+
+    public boolean isDetonated() {
+        return detonated;
     }
 
     @Override
     public void draw(Image image) {
-        // ściana bazowa
-        super.draw(image);
-
-        // jeśli zrujnowana, to rysujemy "poszarpaną" czerwoną nakładkę
-        if (!isDetonated) return;
+        if (!detonated) {
+            super.draw(image);
+            return;
+        }
 
         Graphics2D g = (Graphics2D) image.getGraphics();
-        g.setColor(Color.RED);
-
-        int delta = 4;             // amplituda poszarpania
-        int pieces = 6;            // ile "zębów"
-        int step = ROOM_SIZE / pieces;
 
         int x0 = getX();
         int y0 = getY();
+        int gap = ROOM_SIZE / 3;
+        int seg = (ROOM_SIZE - gap) / 2;
+        int pad = ROOM_SIZE / 10;
+
+        g.setColor(Color.BLACK);
 
         switch (getDirection()) {
-            case NORTH -> drawBrokenHorizontal(g, x0, y0, step, delta);
-            case SOUTH -> drawBrokenHorizontal(g, x0, y0 + ROOM_SIZE, step, delta);
-            case WEST  -> drawBrokenVertical(g, x0, y0, step, delta);
-            case EAST  -> drawBrokenVertical(g, x0 + ROOM_SIZE, y0, step, delta);
+            case NORTH -> {
+                int y = y0;
+
+                g.drawLine(x0, y, x0 + seg, y);
+                g.drawLine(x0 + seg + gap, y, x0 + ROOM_SIZE, y);
+
+                drawRubbleAndX(g, x0 + seg, y - pad, gap, pad * 2);
+            }
+            case SOUTH -> {
+                int y = y0 + ROOM_SIZE;
+                g.drawLine(x0, y, x0 + seg, y);
+                g.drawLine(x0 + seg + gap, y, x0 + ROOM_SIZE, y);
+
+                drawRubbleAndX(g, x0 + seg, y - pad, gap, pad * 2);
+            }
+            case WEST -> {
+                int x = x0;
+                g.drawLine(x, y0, x, y0 + seg);
+                g.drawLine(x, y0 + seg + gap, x, y0 + ROOM_SIZE);
+
+                drawRubbleAndX(g, x - pad, y0 + seg, pad * 2, gap);
+            }
+            case EAST -> {
+                int x = x0 + ROOM_SIZE;
+                g.drawLine(x, y0, x, y0 + seg);
+                g.drawLine(x, y0 + seg + gap, x, y0 + ROOM_SIZE);
+
+                drawRubbleAndX(g, x - pad, y0 + seg, pad * 2, gap);
+            }
         }
     }
 
-    private void drawBrokenHorizontal(Graphics2D g, int x, int y, int step, int delta) {
-        int curX = x;
-        int sign = 1;
+    private void drawRubbleAndX(Graphics2D g, int rx, int ry, int rw, int rh) {
+        g.setColor(new Color(220, 40, 40));
 
-        for (int i = 0; i < 6; i++) {
-            int nextX = curX + step;
-            int offY = y + sign * delta;
+        g.drawLine(rx, ry, rx + rw, ry + rh);
+        g.drawLine(rx + rw, ry, rx, ry + rh);
 
-            // krótkie odcinki z przerwami
-            int a = curX + step / 6;
-            int b = nextX - step / 6;
-            g.drawLine(a, offY, b, y);
-
-            curX = nextX;
-            sign *= -1;
+        int dots = 6;
+        for (int i = 0; i < dots; i++) {
+            int dx = rx + (int) (Math.random() * rw);
+            int dy = ry + (int) (Math.random() * rh);
+            g.drawLine(dx, dy, dx + 3, dy + 2);
         }
     }
 
-    private void drawBrokenVertical(Graphics2D g, int x, int y, int step, int delta) {
-        int curY = y;
-        int sign = 1;
-
-        for (int i = 0; i < 6; i++) {
-            int nextY = curY + step;
-            int offX = x + sign * delta;
-
-            int a = curY + step / 6;
-            int b = nextY - step / 6;
-            g.drawLine(offX, a, x, b);
-
-            curY = nextY;
-            sign *= -1;
-        }
-    }
 }

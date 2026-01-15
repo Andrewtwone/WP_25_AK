@@ -6,7 +6,7 @@ import java.awt.*;
 public class App extends JFrame {
 
     private JMyPanel panel;
-    private Maze maze; // trzymamy instancję, żeby detonować ten sam labirynt
+    private Maze maze;
 
     public App() {
         setSize(800, 600);
@@ -18,7 +18,8 @@ public class App extends JFrame {
         JButton detonateBtn = new JButton("Detonate bombs");
 
         drawBtn.addActionListener(e -> {
-            maze = new Maze(3, 3, 50, 50);
+            MazeFactory factory = new BombedMazeFactory(java.util.Set.of(5, 9));
+            maze = new Maze(3, 3, 50, 50, factory);
             redraw();
         });
 
