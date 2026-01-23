@@ -1,4 +1,4 @@
-package org.example;
+package org.example.maze;
 
 import java.awt.*;
 
@@ -43,38 +43,36 @@ public class BombedWall extends Wall {
                 g.drawLine(x0, y, x0 + seg, y);
                 g.drawLine(x0 + seg + gap, y, x0 + ROOM_SIZE, y);
 
-                drawRubbleAndX(g, x0 + seg, y - pad, gap, pad * 2);
+                drawRubble(g, x0 + seg, y - pad, gap, pad * 2);
             }
             case SOUTH -> {
                 int y = y0 + ROOM_SIZE;
                 g.drawLine(x0, y, x0 + seg, y);
                 g.drawLine(x0 + seg + gap, y, x0 + ROOM_SIZE, y);
 
-                drawRubbleAndX(g, x0 + seg, y - pad, gap, pad * 2);
+                drawRubble(g, x0 + seg, y - pad, gap, pad * 2);
             }
             case WEST -> {
                 int x = x0;
                 g.drawLine(x, y0, x, y0 + seg);
                 g.drawLine(x, y0 + seg + gap, x, y0 + ROOM_SIZE);
 
-                drawRubbleAndX(g, x - pad, y0 + seg, pad * 2, gap);
+                drawRubble(g, x - pad, y0 + seg, pad * 2, gap);
             }
             case EAST -> {
                 int x = x0 + ROOM_SIZE;
                 g.drawLine(x, y0, x, y0 + seg);
                 g.drawLine(x, y0 + seg + gap, x, y0 + ROOM_SIZE);
 
-                drawRubbleAndX(g, x - pad, y0 + seg, pad * 2, gap);
+                drawRubble(g, x - pad, y0 + seg, pad * 2, gap);
             }
         }
     }
 
-    private void drawRubbleAndX(Graphics2D g, int rx, int ry, int rw, int rh) {
+    private void drawRubble(Graphics2D g, int rx, int ry, int rw, int rh) {
         g.setColor(new Color(220, 40, 40));
 
-        g.drawLine(rx, ry, rx + rw, ry + rh);
-        g.drawLine(rx + rw, ry, rx, ry + rh);
-
+        // rubble dots
         int dots = 6;
         for (int i = 0; i < dots; i++) {
             int dx = rx + (int) (Math.random() * rw);

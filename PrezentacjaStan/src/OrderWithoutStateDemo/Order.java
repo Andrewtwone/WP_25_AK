@@ -40,6 +40,13 @@ public class Order {
         }
     }
 
+    public void deliver() {
+        switch (status) {
+            case SHIPPED -> System.out.println("Zamówienie jest dostarczone");
+            default -> System.out.println("Nie można dostarczyć zamówienie");
+        }
+    }
+
     public void cancel() {
         log("cancel()");
         switch (status) {
@@ -67,6 +74,12 @@ public class Order {
         System.out.println(
                 Ansi.CYAN + "FINAL STATE: " + order.getStatus() + Ansi.RESET
         );
+
+        Order order1 = new Order();
+
+        order1.pay();
+        order1.ship();
+        order1.deliver();
 
 }
 

@@ -1,4 +1,9 @@
-package org.example;
+package org.example.factory;
+
+import org.example.maze.Direction;
+import org.example.maze.Room;
+import org.example.maze.Wall;
+import org.example.maze.Door;
 
 public class StandardMazeFactory implements MazeFactory {
 
@@ -17,3 +22,4 @@ public class StandardMazeFactory implements MazeFactory {
         return new Door(r1, r2, dirFrom1To2);
     }
 }
+

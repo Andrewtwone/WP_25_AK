@@ -47,6 +47,12 @@ public class Order {
         System.out.println(
                 Ansi.CYAN + "FINAL STATE: " + order.getStateName() + Ansi.RESET
         );
+        System.out.println();
+
+        Order order1 = new Order();
+
+        order1.pay();
+        order1.ship();
     }
 }
 

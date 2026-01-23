@@ -5,15 +5,14 @@ import java.util.Arrays;
 
 
 class CalculatorView {
-    final int boardWidth = 360;
-    final int boardHeight = 540;
-
-
+    final int boardWidth = 420;
+    final int boardHeight = 640;
     final Color customLightGray = new Color(212, 212, 210);
     final Color customDarkGray = new Color(80, 80, 80);
     final Color customBlack = new Color(28, 28, 28);
     final Color customOrange = new Color(255, 149, 0);
-    final Color integerColor = new Color(255, 255, 255);
+    // Integer part in green, decimal part stays accent color
+    final Color integerColor = new Color(0, 200, 0);
     final Color decimalColor = new Color(255, 200, 0);
     final Color errorColor = new Color(255, 80, 80);
 
@@ -36,32 +35,33 @@ class CalculatorView {
 
 
     CalculatorView() {
-        frame.setSize(boardWidth, boardHeight);
-        frame.setLocationRelativeTo(null);
-        frame.setResizable(false);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
 
         displayLabel.setBackground(customBlack);
 //        displayLabel.setForeground(Color.white);
-        displayLabel.setFont(new Font("Consolas", Font.BOLD, 60));
+        displayLabel.setFont(new Font("Consolas", Font.BOLD, 56));
         displayLabel.setHorizontalAlignment(JLabel.RIGHT);
         displayLabel.setOpaque(true);
         displayLabel.setText(formatStyledText("0.00"));
 
-
-        displayPanel.add(displayLabel);
+        displayPanel.setPreferredSize(new Dimension(boardWidth, 120));
+        displayPanel.add(displayLabel, BorderLayout.CENTER);
         frame.add(displayPanel, BorderLayout.NORTH);
 
 
         buttonsPanel.setBackground(customBlack);
+        buttonsPanel.setPreferredSize(new Dimension(boardWidth, boardHeight - 120));
         frame.add(buttonsPanel, BorderLayout.CENTER);
 
         for (String value : buttonValues) {
             JButton button = new JButton(value);
             button.setFont(new Font("Arial", Font.PLAIN, 30));
             button.setFocusable(false);
+            button.setOpaque(true);
+            button.setContentAreaFilled(true);
+            button.setBorderPainted(false);
             button.setBorder(new LineBorder(customBlack));
             if (topSymbols.contains(value)) {
                 button.setBackground(customLightGray);
@@ -75,6 +75,11 @@ class CalculatorView {
             }
             buttonsPanel.add(button);
         }
+
+        frame.setPreferredSize(new Dimension(boardWidth, boardHeight));
+        frame.pack();
+        frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
     }
 
     void setVisible(boolean visible) { frame.setVisible(visible);}
@@ -91,15 +96,25 @@ class CalculatorView {
 
     private String formatStyledText(String value) {
         if (value.equals("ERROR")) {
-            return String.format("<html><font color='rgb(%d,%d,%d)'><b>%s</b></font></html>",
-                    errorColor.getRed(), errorColor.getBlue(), errorColor.getGreen(), value);
+            return String.format(
+                    "<html><font color='rgb(%d,%d,%d)'><b>%s</b></font></html>",
+                    errorColor.getRed(), errorColor.getGreen(), errorColor.getBlue(), value);
         }
-        String[] parts = value.split("\\.");
-        if (parts.length == 2) {
-            return String.format("<html><font color='rgb(%d,%d,%d)'>%s</font><font color='rgb(%d,%d,%d)'>.%s</font></html>",
-                    integerColor.getRed(), integerColor.getGreen(), integerColor.getBlue(), parts[0],
-                    decimalColor.getRed(), decimalColor.getGreen(), decimalColor.getBlue(), parts[1]);
+
+        int dotIdx = value.lastIndexOf('.');
+        int commaIdx = value.lastIndexOf(',');
+        int sepIdx = Math.max(dotIdx, commaIdx);
+
+        if (sepIdx != -1) {
+            String intPart = value.substring(0, sepIdx);
+            String decimalPart = value.substring(sepIdx + 1);
+            char sepChar = value.charAt(sepIdx);
+            return String.format(
+                    "<html><font color='rgb(%d,%d,%d)'>%s</font><font color='rgb(%d,%d,%d)'>%c%s</font></html>",
+                    integerColor.getRed(), integerColor.getGreen(), integerColor.getBlue(), intPart,
+                    decimalColor.getRed(), decimalColor.getGreen(), decimalColor.getBlue(), sepChar, decimalPart);
         }
+
         return String.format("<html><font color='rgb(%d,%d,%d)'>%s</font></html>",
                 integerColor.getRed(), integerColor.getGreen(), integerColor.getBlue(), value);
     }

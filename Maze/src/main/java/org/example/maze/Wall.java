@@ -1,4 +1,4 @@
-package org.example;
+package org.example.maze;
 
 import java.awt.*;
 
@@ -28,3 +28,4 @@ public class Wall extends MapSite {
         }
     }
 }
+

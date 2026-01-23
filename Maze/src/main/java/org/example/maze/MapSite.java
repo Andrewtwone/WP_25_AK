@@ -1,5 +1,4 @@
-package org.example;
-
+package org.example.maze;
 import java.awt.*;
 
 public abstract class MapSite {
@@ -21,8 +20,4 @@ public abstract class MapSite {
     public void setY(int y) { this.y = y; }
 
     public abstract void draw(Image image);
-}
-
-enum Direction {
-    NORTH, EAST, SOUTH, WEST
 }

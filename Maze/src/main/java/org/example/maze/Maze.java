@@ -1,10 +1,17 @@
-package org.example;
+package org.example.maze;
+
+import org.example.observer.BombObserver;
+import org.example.factory.MazeFactory;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Maze {
 
     private final int rows, cols;
     private final Room[][] rooms;
     private final MazeFactory factory;
+    private final List<BombObserver> bombObservers = new ArrayList<>();
 
     public Maze(int cols, int rows, int startX, int startY, MazeFactory factory) {
         this.rows = rows;
@@ -54,19 +61,19 @@ public class Maze {
         rooms[2][2].setSide(Direction.EAST, null);
 
         // Drzwi
-        connect(0, 0, 0, 1, Direction.EAST);
-        connect(0, 1, 0, 2, Direction.EAST);
-        connect(0, 2, 1, 2, Direction.SOUTH);
+        connectRooms(0, 0, 0, 1, Direction.EAST);
+        connectRooms(0, 1, 0, 2, Direction.EAST);
+        connectRooms(0, 2, 1, 2, Direction.SOUTH);
 
-        connect(1, 0, 1, 1, Direction.EAST);
-        connect(1, 1, 1, 2, Direction.EAST);
+        connectRooms(1, 0, 1, 1, Direction.EAST);
+        connectRooms(1, 1, 1, 2, Direction.EAST);
 
-        connect(1, 1, 2, 1, Direction.SOUTH);
-        connect(2, 1, 2, 2, Direction.EAST);
-        connect(2, 0, 2, 1, Direction.EAST);
+        connectRooms(1, 1, 2, 1, Direction.SOUTH);
+        connectRooms(2, 1, 2, 2, Direction.EAST);
+        connectRooms(2, 0, 2, 1, Direction.EAST);
     }
 
-    private void connect(int r1, int c1, int r2, int c2, Direction dir1to2) {
+    public void connectRooms(int r1, int c1, int r2, int c2, Direction dir1to2) {
         Room room1 = rooms[r1][c1];
         Room room2 = rooms[r2][c2];
 
@@ -83,19 +90,45 @@ public class Maze {
         room2.setSide(opposite, door);
     }
 
+    public void setEntrance(int row, int col, Direction side) {
+        rooms[row][col].setSide(side, null);
+    }
+
     public void detonateBombRooms() {
         for (int r = 0; r < rows; r++) {
             for (int c = 0; c < cols; c++) {
                 Room room = rooms[r][c];
                 if (room instanceof BombedRoom br) {
                     br.detonate();
+                    
+                    // Notify all observers
+                    notifyBombObservers(br);
 
-                    detonateIfBombedWall(room.getSide(Direction.NORTH));
-                    detonateIfBombedWall(room.getSide(Direction.SOUTH));
-                    detonateIfBombedWall(room.getSide(Direction.WEST));
-                    detonateIfBombedWall(room.getSide(Direction.EAST));
+                    for (var d : Direction.values()) {
+                        detonateIfBombedWall(room.getSide(d));
+                    }
+
+//                    detonateIfBombedWall(room.getSide(Direction.NORTH));
+//                    detonateIfBombedWall(room.getSide(Direction.SOUTH));
+//                    detonateIfBombedWall(room.getSide(Direction.WEST));
+//                    detonateIfBombedWall(room.getSide(Direction.EAST));
                 }
             }
+        }
+    }
+
+    // Observer pattern
+    public void addBombObserver(BombObserver observer) {
+        bombObservers.add(observer);
+    }
+
+    public void removeBombObserver(BombObserver observer) {
+        bombObservers.remove(observer);
+    }
+
+    private void notifyBombObservers(BombedRoom room) {
+        for (BombObserver observer : bombObservers) {
+            observer.onBombDetonated(room);
         }
     }
 
