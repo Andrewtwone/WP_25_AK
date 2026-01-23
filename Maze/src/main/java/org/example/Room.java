@@ -11,6 +11,10 @@ public class Room extends MapSite {
         this.nr = nr;
     }
 
+    public int getNr() {
+        return nr;
+    }
+
     public void setSide(Direction d, MapSite site) {
         sides[d.ordinal()] = site;
     }

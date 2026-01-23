@@ -118,8 +118,8 @@ public class CalculatorModel {
         if (raw.equals("ERROR")) return raw;
         try {
             double val = Double.parseDouble(raw);
-            String formatted = String.format("%5.2f", val);
-            String intPart = formatted.split("\\.")[0].trim();
+            String formatted = String.format("%.2f", val);
+            String intPart = formatted.split("[.,]")[0].trim();
             if (intPart.length() > 5) return "ERROR";
             return formatted;
         } catch (Exception e) {

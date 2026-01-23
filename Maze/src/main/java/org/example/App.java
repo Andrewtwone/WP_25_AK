@@ -7,33 +7,53 @@ public class App extends JFrame {
 
     private JMyPanel panel;
     private Maze maze;
+    private CommandInvoker commandInvoker; // Command pattern
 
     public App() {
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         panel = new JMyPanel();
+        commandInvoker = new CommandInvoker();
 
         JButton drawBtn = new JButton("Draw maze");
         JButton detonateBtn = new JButton("Detonate bombs");
+        JButton undoBtn = new JButton("Undo");
 
+        // Command pattern: Use command objects instead of direct actions
         drawBtn.addActionListener(e -> {
-            MazeFactory factory = new BombedMazeFactory(java.util.Set.of(5, 9));
-            maze = new Maze(3, 3, 50, 50, factory);
-            redraw();
+            Command drawCommand = new DrawMazeCommand(
+                java.util.Set.of(5, 9),
+                m -> maze = m,
+                this::redraw
+            );
+            commandInvoker.executeCommand(drawCommand);
+            
+            // Observer pattern: Add observer to log bomb detonations
+            if (maze != null) {
+                maze.addBombObserver(new BombDetonationLogger());
+            }
         });
 
         detonateBtn.addActionListener(e -> {
-            if (maze == null) return;
-            maze.detonateBombRooms();
-            redraw();
+            Command detonateCommand = new DetonateBombsCommand(
+                () -> maze,
+                this::redraw
+            );
+            commandInvoker.executeCommand(detonateCommand);
         });
+
+        undoBtn.addActionListener(e -> {
+            commandInvoker.undo();
+        });
+        undoBtn.setEnabled(true);
 
         setLayout(new BorderLayout());
 
-        JPanel menuPanel = new JPanel(new GridLayout(1, 2));
+        JPanel menuPanel = new JPanel(new GridLayout(1, 3));
         menuPanel.add(drawBtn);
         menuPanel.add(detonateBtn);
+        menuPanel.add(undoBtn);
 
         add(menuPanel, BorderLayout.NORTH);
         add(panel, BorderLayout.CENTER);
