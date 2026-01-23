@@ -1,6 +1,8 @@
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.util.Locale;
+
 public class CalculatorModel {
 
     private BigDecimal A = BigDecimal.ZERO;
@@ -118,7 +120,7 @@ public class CalculatorModel {
         if (raw.equals("ERROR")) return raw;
         try {
             double val = Double.parseDouble(raw);
-            String formatted = String.format("%.2f", val);
+            String formatted = String.format(Locale.US, "%.2f", val);
             String intPart = formatted.split("[.,]")[0].trim();
             if (intPart.length() > 5) return "ERROR";
             return formatted;

@@ -5,8 +5,6 @@ import java.util.Arrays;
 
 
 class CalculatorView {
-    // Slightly wider / taller to comfortably fit
-    // 5 integer digits + decimal part and all 5 rows of buttons.
     final int boardWidth = 420;
     final int boardHeight = 640;
     final Color customLightGray = new Color(212, 212, 210);
@@ -37,29 +35,23 @@ class CalculatorView {
 
 
     CalculatorView() {
-        // Let layout and preferred sizes define the window size
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
 
         displayLabel.setBackground(customBlack);
 //        displayLabel.setForeground(Color.white);
-        // Slightly smaller font so more digits fit in the display
-        displayLabel.setFont(new Font("Consolas", Font.BOLD, 48));
+        displayLabel.setFont(new Font("Consolas", Font.BOLD, 56));
         displayLabel.setHorizontalAlignment(JLabel.RIGHT);
         displayLabel.setOpaque(true);
         displayLabel.setText(formatStyledText("0.00"));
 
-
-        // Give the display a fixed preferred height so it
-        // never steals space from the top row of buttons.
         displayPanel.setPreferredSize(new Dimension(boardWidth, 120));
         displayPanel.add(displayLabel, BorderLayout.CENTER);
         frame.add(displayPanel, BorderLayout.NORTH);
 
 
         buttonsPanel.setBackground(customBlack);
-        // Ensure the buttons panel has enough space for all 5 rows.
         buttonsPanel.setPreferredSize(new Dimension(boardWidth, boardHeight - 120));
         frame.add(buttonsPanel, BorderLayout.CENTER);
 
@@ -67,6 +59,9 @@ class CalculatorView {
             JButton button = new JButton(value);
             button.setFont(new Font("Arial", Font.PLAIN, 30));
             button.setFocusable(false);
+            button.setOpaque(true);
+            button.setContentAreaFilled(true);
+            button.setBorderPainted(false);
             button.setBorder(new LineBorder(customBlack));
             if (topSymbols.contains(value)) {
                 button.setBackground(customLightGray);
@@ -80,8 +75,7 @@ class CalculatorView {
             }
             buttonsPanel.add(button);
         }
-        // Pack components to ensure all buttons (including the top row)
-        // are fully visible regardless of DPI / font rendering.
+
         frame.setPreferredSize(new Dimension(boardWidth, boardHeight));
         frame.pack();
         frame.setResizable(false);
@@ -107,9 +101,6 @@ class CalculatorView {
                     errorColor.getRed(), errorColor.getGreen(), errorColor.getBlue(), value);
         }
 
-        // Support both '.' and ',' as decimal separators so that,
-        // regardless of locale, the integer part can be colored
-        // differently from the fractional part.
         int dotIdx = value.lastIndexOf('.');
         int commaIdx = value.lastIndexOf(',');
         int sepIdx = Math.max(dotIdx, commaIdx);
