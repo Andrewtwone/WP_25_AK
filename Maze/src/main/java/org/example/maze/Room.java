@@ -1,4 +1,4 @@
-package org.example;
+package org.example.maze;
 
 import java.awt.*;
 
@@ -38,7 +38,8 @@ public class Room extends MapSite {
         g.drawString(
                 Integer.toString(nr),
                 x + ROOM_SIZE / 2 - 5,
-                y + ROOM_SIZE / 2
+                y + ROOM_SIZE / 2 + 5
         );
     }
 }
+

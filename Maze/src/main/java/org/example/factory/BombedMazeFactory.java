@@ -1,10 +1,17 @@
-package org.example;
+package org.example.factory;
+
+import org.example.maze.Direction;
+import org.example.maze.Room;
+import org.example.maze.BombedRoom;
+import org.example.maze.Wall;
+import org.example.maze.BombedWall;
+import org.example.maze.Door;
 
 import java.util.Set;
 
 public class BombedMazeFactory implements MazeFactory {
 
-    private final Set<Integer> bombRooms; // np. {5, 9}
+    private final Set<Integer> bombRooms;
 
     public BombedMazeFactory(Set<Integer> bombRooms) {
         this.bombRooms = bombRooms;
@@ -26,3 +33,4 @@ public class BombedMazeFactory implements MazeFactory {
         return new Door(r1, r2, dirFrom1To2);
     }
 }
+

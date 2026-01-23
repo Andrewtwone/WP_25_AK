@@ -1,4 +1,11 @@
-package org.example;
+package org.example.ui;
+
+import org.example.command.Command;
+import org.example.command.CommandInvoker;
+import org.example.command.DetonateBombsCommand;
+import org.example.command.DrawMazeCommand;
+import org.example.maze.Maze;
+import org.example.observer.BombDetonationLogger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +36,7 @@ public class App extends JFrame {
             );
             commandInvoker.executeCommand(drawCommand);
             
-            // Observer pattern: Add observer to log bomb detonations
+            // Observer pattern
             if (maze != null) {
                 maze.addBombObserver(new BombDetonationLogger());
             }

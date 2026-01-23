@@ -1,12 +1,13 @@
-package org.example;
+package org.example.command;
+
+import org.example.factory.BombedMazeFactory;
+import org.example.factory.MazeFactory;
+import org.example.maze.Maze;
 
 import java.util.Set;
 import java.util.function.Consumer;
 
-/**
- * Command pattern: Concrete command for drawing a maze.
- * Encapsulates the maze creation logic.
- */
+
 public class DrawMazeCommand implements Command {
     
     private MazeFactory factory;
@@ -24,8 +25,6 @@ public class DrawMazeCommand implements Command {
     @Override
     public void execute() {
         // Store previous maze for undo
-        // Note: In a real scenario, we'd need a way to get current maze
-        // For now, we'll create a new maze
         newMaze = new Maze(3, 3, 50, 50, factory);
         mazeSetter.accept(newMaze);
         redrawAction.run();

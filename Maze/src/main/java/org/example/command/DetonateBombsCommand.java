@@ -1,11 +1,8 @@
-package org.example;
+package org.example.command;
 
+import org.example.maze.Maze;
 import java.util.function.Supplier;
 
-/**
- * Command pattern: Concrete command for detonating bombs.
- * Encapsulates the bomb detonation logic.
- */
 public class DetonateBombsCommand implements Command {
     
     private Supplier<Maze> mazeGetter;
@@ -29,9 +26,6 @@ public class DetonateBombsCommand implements Command {
     
     @Override
     public void undo() {
-        // Note: Undoing detonation would require storing previous state
-        // For simplicity, we'll just note that undo is not fully implemented
-        // In a real scenario, we'd need to track which rooms/walls were detonated
         if (executed) {
             System.out.println("Cannot undo detonation - state not preserved");
         }

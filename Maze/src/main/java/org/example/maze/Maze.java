@@ -1,4 +1,7 @@
-package org.example;
+package org.example.maze;
+
+import org.example.observer.BombObserver;
+import org.example.factory.MazeFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +73,6 @@ public class Maze {
         connectRooms(2, 0, 2, 1, Direction.EAST);
     }
 
-    // Made public for Builder pattern
     public void connectRooms(int r1, int c1, int r2, int c2, Direction dir1to2) {
         Room room1 = rooms[r1][c1];
         Room room2 = rooms[r2][c2];
@@ -87,8 +89,7 @@ public class Maze {
         };
         room2.setSide(opposite, door);
     }
-    
-    // Made public for Builder pattern
+
     public void setEntrance(int row, int col, Direction side) {
         rooms[row][col].setSide(side, null);
     }
@@ -100,19 +101,23 @@ public class Maze {
                 if (room instanceof BombedRoom br) {
                     br.detonate();
                     
-                    // Notify all observers (Observer pattern)
+                    // Notify all observers
                     notifyBombObservers(br);
 
-                    detonateIfBombedWall(room.getSide(Direction.NORTH));
-                    detonateIfBombedWall(room.getSide(Direction.SOUTH));
-                    detonateIfBombedWall(room.getSide(Direction.WEST));
-                    detonateIfBombedWall(room.getSide(Direction.EAST));
+                    for (var d : Direction.values()) {
+                        detonateIfBombedWall(room.getSide(d));
+                    }
+
+//                    detonateIfBombedWall(room.getSide(Direction.NORTH));
+//                    detonateIfBombedWall(room.getSide(Direction.SOUTH));
+//                    detonateIfBombedWall(room.getSide(Direction.WEST));
+//                    detonateIfBombedWall(room.getSide(Direction.EAST));
                 }
             }
         }
     }
 
-    // Observer pattern: methods to manage observers
+    // Observer pattern
     public void addBombObserver(BombObserver observer) {
         bombObservers.add(observer);
     }

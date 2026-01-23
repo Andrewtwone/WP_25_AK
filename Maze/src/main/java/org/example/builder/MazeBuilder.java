@@ -1,12 +1,13 @@
-package org.example;
+package org.example.builder;
+
+import org.example.factory.MazeFactory;
+import org.example.maze.Direction;
+import org.example.maze.Maze;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Builder pattern for constructing Maze objects step by step.
- * This allows flexible maze creation with a fluent interface.
- */
+
 public class MazeBuilder {
     
     private int rows = 3;
@@ -66,13 +67,11 @@ public class MazeBuilder {
         }
         
         Maze maze = new Maze(cols, rows, startX, startY, factory);
-        
-        // Apply custom connections
+
         for (Connection conn : connections) {
             maze.connectRooms(conn.r1, conn.c1, conn.r2, conn.c2, conn.dir);
         }
-        
-        // Apply custom entrances
+
         for (Entrance entrance : entrances) {
             maze.setEntrance(entrance.row, entrance.col, entrance.side);
         }

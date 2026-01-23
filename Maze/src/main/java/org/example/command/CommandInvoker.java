@@ -1,11 +1,8 @@
-package org.example;
+package org.example.command;
 
 import java.util.Stack;
 
-/**
- * Command pattern: Invoker that manages command execution and undo/redo.
- * This demonstrates the Command pattern's ability to queue, log, and undo operations.
- */
+
 public class CommandInvoker {
     
     private Stack<Command> history = new Stack<>();
@@ -14,8 +11,7 @@ public class CommandInvoker {
     public void executeCommand(Command command) {
         command.execute();
         history.push(command);
-        
-        // Limit history size
+
         if (history.size() > maxHistorySize) {
             history.remove(0);
         }
